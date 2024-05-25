@@ -74,7 +74,6 @@ jobs:
           cp ./{README.md,LICENSE,fxmanifest.lua} ./temp/slrn_scratchcard
           cp -r ./{client,config,server} ./temp/slrn_scratchcard
           cp -r ./web/build ./temp/slrn_scratchcard/web/build
-          cp ./web/LICENSE ./temp/slrn_scratchcard/web/build
           cp -r ./images ./temp/slrn_scratchcard/images
           cd ./temp && zip -r ../slrn_scratchcard.zip ./slrn_scratchcard
 
