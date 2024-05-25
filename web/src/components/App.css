@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+.App {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none; /* Prevent text selection */
+  font-family: 'Roboto', sans-serif;
+}
+
+.canvas-container {
+  position: absolute;
+  width: 620px; /* Fixed width for 5x5 grid */
+  height: 920px; /* Fixed height for 5x5 grid */
+  border: 10px solid black; /* Border around the whole canvas container */
+  border-radius: 10px; /* Rounded corners for the border */
+  padding: 0; /* Ensure no padding is added */
+  margin: 0; /* Ensure no margin is added */
+}
+
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.barcode {
+  position: relative;
+  top: 90%;
+  left: 0%;
+}
+
+.prize-layer {
+  background-color: #333; /* Darker background color */
+}
+
+.reset-button {
+  position: absolute;
+  top: 920px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  font-size: 1rem;
+  background-color: #00963C;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Roboto', sans-serif;
+}
+
+.reset-button:hover {
+  background-color: #45a049;
+}
+
+.nui-wrapper {
+  text-align: center;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none; /* Prevent text selection */
+}
+
+pre {
+  counter-reset:line-numbering;
+  background:#2c3e50;
+  padding:12px 0px 14px 0;
+  color:#ecf0f1;
+  line-height:140%;
+}
+
+.popup-thing {
+  background: #282c34;
+  border-radius: 10px;
+  width: 500px;
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
