@@ -2,7 +2,7 @@ fx_version "cerulean"
 
 description "Solareon Scratchcard"
 author "solareon."
-version '1.0.1'
+version '1.0.3'
 repository 'https://github.com/solareon/slrn_scratchcard'
 
 lua54 'yes'
