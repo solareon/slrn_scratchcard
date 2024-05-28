@@ -3,6 +3,9 @@ A simple yet flexible scratch card system utilizing ox_inventory metadata and Re
 
 **ESX/QB/ND/QBOX supported with bridge**
 
+## Preview
+![image](https://github.com/solareon/slrn_scratchcard/assets/769465/8167930a-caec-4175-af0d-01b45e436802)
+
 ## Installation
 Download the release version or build using `pnpm i` and `pnpm build`. Add the items to your `ox_inventory` configuration and to a shop then restart your server.
 
