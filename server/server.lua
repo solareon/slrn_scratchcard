@@ -1,9 +1,19 @@
+if not lib then return end
+
+lib.versionCheck('solareon/slrn_scratchcard')
+
+if GetCurrentResourceName() ~= 'slrn_scratchcard' then
+    lib.print.error('The resource needs to be named ^5slrn_scratchcard^7.')
+    return
+end
+
 local config = require 'config.server'
 
 local playerData = {}
 
 local function createScratcher(src, scratcherIndex)
     if not src then return end
+
     local prizeArray = lib.table.deepclone(config.prizeArray)
     local prizeConfig = config.cardArray[scratcherIndex]
     local prizeSquares = prizeConfig.gridSizeX * prizeConfig.gridSizeY
@@ -26,6 +36,7 @@ local function createScratcher(src, scratcherIndex)
         end
     end
     playerData[src].prizeAmount = prizeAmount
+
     local cardData = {}
     cardData.gridSizeX = prizeConfig.gridSizeX
     cardData.gridSizeY = prizeConfig.gridSizeY
@@ -34,13 +45,13 @@ local function createScratcher(src, scratcherIndex)
     TriggerClientEvent('slrn_scratchcard:client:openScratcher', src, prizeData, cardData)
 end
 
-exports('scratcher', function(event, item, inventory, slot, data)
+exports('scratcher', function(event, _, inventory, slot, _)
     if event == 'usingItem' then
         if not playerData[inventory.id] then
             playerData[inventory.id] = {}
         end
         if playerData[inventory.id].playerCooldown then
-            exports.qbx_core:Notify(inventory.id, 'You are scratching too fast!')
+            DoNotification(inventory.id, 'You are scratching too fast!', 'error')
             return false
         end
         local itemInfo = exports.ox_inventory:GetSlot(inventory.id, slot)
@@ -60,26 +71,22 @@ exports('scratcher', function(event, item, inventory, slot, data)
         end
         return
     end
-
-    if event == 'buying' then
-        return TriggerClientEvent('ox_lib:notify', inventory.id,
-            { type = 'success', description = 'You bought a scratcher!' })
-    end
 end)
 
-RegisterNetEvent('slrn_scratchcard:server:getPrize', function()
+RegisterNetEvent('slrn_scratchcard:server:getPrize', function ()
     local src = source
     if not playerData[src].prizeAmount or not src then return end
     local success = playerData[src].prizeAmount > 0 and 'success' or 'error'
     local message = 'You got $%s from the scratcher!'
-    exports.qbx_core:Notify(src, (message):format(playerData[src].prizeAmount), success, 5000)
+    DoNotification(src, (message):format(playerData[src].prizeAmount), success)
     if success then
-        local player = exports.qbx_core:GetPlayer(src)
-        player.Functions.AddMoney('cash', playerData[src].prizeAmount, 'scratcher ticket')
+        local player = GetPlayer(src)
+        AddMoney(player, 'cash', playerData[src].prizeAmount)
     end
     playerData[src].prizeAmount = 0
 end)
-if debug then
+
+if config.debug then
     lib.addCommand('getscratcher', {
         help = 'Get a scratch card (admin only)',
         params = {
