@@ -50,7 +50,7 @@ Add these to a shop in your `ox_inventory/data/shops.lua` or to another shop res
 ```
 
 # Support
-- No support is provided but you can ask questions/submit issues via github.
+- [Discord](https://discord.gg/TZFBBHvG6E)
 
 # Credits
 - [Randolio](https://github.com/Randolio) for the bridge stuff
