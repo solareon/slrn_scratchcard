@@ -1,20 +1,9 @@
-if not lib then return end
-
-lib.versionCheck('solareon/slrn_scratchcard')
-
-if GetCurrentResourceName() ~= 'slrn_scratchcard' then
-    lib.print.error('The resource needs to be named ^5slrn_scratchcard^7.')
-    return
-end
-
 local config = require 'config.server'
 
-local playerPrizeData = {}
-local playerCooldown = {}
+local playerData = {}
 
 local function createScratcher(src, scratcherIndex)
     if not src then return end
-
     local prizeArray = lib.table.deepclone(config.prizeArray)
     local prizeConfig = config.cardArray[scratcherIndex]
     local prizeSquares = prizeConfig.gridSizeX * prizeConfig.gridSizeY
@@ -36,48 +25,61 @@ local function createScratcher(src, scratcherIndex)
             prizeAmount = prizeAmount + (prizeArray[winningSymbol].amount * prizeConfig.multiplier)
         end
     end
-    playerPrizeData[src] = prizeAmount
+    playerData[src].prizeAmount = prizeAmount
     local cardData = {}
     cardData.gridSizeX = prizeConfig.gridSizeX
     cardData.gridSizeY = prizeConfig.gridSizeY
     cardData.cardBgColor = prizeConfig.cardBgColor
+
     TriggerClientEvent('slrn_scratchcard:client:openScratcher', src, prizeData, cardData)
 end
 
-exports('scratcher', function(event, item, inventory, _, _)
+exports('scratcher', function(event, item, inventory, slot, data)
     if event == 'usingItem' then
-        if playerCooldown[inventory.id] then
-            DoNotification(inventory.id, 'You are scratching too fast!', 'error')
+        if not playerData[inventory.id] then
+            playerData[inventory.id] = {}
+        end
+        if playerData[inventory.id].playerCooldown then
+            exports.qbx_core:Notify(inventory.id, 'You are scratching too fast!')
             return false
         end
-        createScratcher(source, item.metadata.scratcherType)
-        return true
+        local itemInfo = exports.ox_inventory:GetSlot(inventory.id, slot)
+        if itemInfo then
+            playerData[inventory.id].scratcherType = itemInfo.metadata.scratcherType
+            return true
+        end
     end
- 
+
     if event == 'usedItem' then
-        playerCooldown[inventory.id] = true
-        SetTimeout(config.cooldown, function()
-            playerCooldown[inventory.id] = false
-        end)
+        if playerData[inventory.id].scratcherType then
+            createScratcher(inventory.id, playerData[inventory.id].scratcherType)
+            playerData[inventory.id].playerCooldown = true
+            SetTimeout(3000, function()
+                playerData[inventory.id].playerCooldown = false
+            end)
+        end
         return
     end
- 
-end)
 
-RegisterNetEvent('slrn_scratchcard:server:getPrize', function ()
-    local src = source
-    if not playerPrizeData[src] or not src then return end
-    local success = playerPrizeData[src] > 0 and 'success' or 'error'
-    local message = 'You got $%s from the scratcher!'
-    DoNotification(src, (message):format(playerPrizeData[src]), success)
-    if success then
-        local player = GetPlayer(src)
-        AddMoney(player, 'cash', playerPrizeData[src])
+    if event == 'buying' then
+        return TriggerClientEvent('ox_lib:notify', inventory.id,
+            { type = 'success', description = 'You bought a scratcher!' })
     end
-    playerPrizeData[src] = 0
 end)
 
-if config.debug then
+RegisterNetEvent('slrn_scratchcard:server:getPrize', function()
+    local src = source
+    if not playerData[src].prizeAmount or not src then return end
+    local success = playerData[src].prizeAmount > 0 and 'success' or 'error'
+    local message = 'You got $%s from the scratcher!'
+    exports.qbx_core:Notify(src, (message):format(playerData[src].prizeAmount), success, 5000)
+    if success then
+        local player = exports.qbx_core:GetPlayer(src)
+        player.Functions.AddMoney('cash', playerData[src].prizeAmount, 'scratcher ticket')
+    end
+    playerData[src].prizeAmount = 0
+end)
+if debug then
     lib.addCommand('getscratcher', {
         help = 'Get a scratch card (admin only)',
         params = {

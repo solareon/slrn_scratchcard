@@ -13,18 +13,26 @@ Download the release version or build using `pnpm i` and `pnpm build`. Add the i
 Add this item to your `ox_inventory/data/items.lua` configuration
 
 ```lua
-['scratchercard'] = {
-    description = 'Scratchoff Ticket',
-    weight = 5,
-    stack = true,
-    close = true,
-    client = {
-        usetime = 2500,
-    },
-    server = {
-        export = 'slrn_scratchcard.scratcher',
-    }
-},
+	['scratchercard'] = {
+		label = 'Lottery Scratcher',
+		description = 'Lottery Scratchoff Ticket',
+		weight = 5,
+		stack = true,
+		close = true,
+		client = {
+			usetime = 2500,
+			anim = { clip = 'static', dict = 'amb@code_human_wander_texting_fat@male@base' },
+			prop = {
+				bone = 28422,
+				model = 'prop_phone_ing',
+				pos = vector3(-0.020, -0.010, 0.000),
+				rot = vector3(2.309, 88.845, 29.979),
+			}
+		},
+		server = {
+			export = 'slrn_scratchcard.scratcher',
+		}
+	},
 ```
 
 ### Shops
