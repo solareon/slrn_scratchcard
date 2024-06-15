@@ -1,13 +1,17 @@
-name: Discord Webhook
+name: "Discord Commit"
+
 on: [push]
+
 jobs:
-  Discord_notification:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Run Discord Webhook
-        uses: solareon/discord-commits@main
-        with:
-          id: ${{ secrets.DISCORD_WEBHOOK_ID }}
-          token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
+    discord_notification:
+      if: github.event.repository.default_branch == github.ref_name
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+
+        - name: Run Discord Webhook
+          uses: solareon/discord-commits@main
+          with:
+            id: ${{ secrets.DISCORD_WEBHOOK_ID }}
+            token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
