@@ -22,14 +22,14 @@ local function createScratcher(src, scratcherIndex)
     local winner = math.random(100) <= prizeConfig.winChance and true or false
     local prizeAmount = 0
     if winner then
-        for i = 1, prizeConfig.minWinSymbol do
+        for _ = 1, prizeConfig.minWinSymbol do
             prizeData[#prizeData + 1] = prizeArray[winningSymbol]
             prizeData[#prizeData].color = 'gold'
             prizeAmount = prizeAmount + (prizeArray[winningSymbol].amount * prizeConfig.multiplier)
         end
         prizeSquares = prizeSquares - prizeConfig.minWinSymbol
     end
-    for i = 1, prizeSquares do
+    for _ = 1, prizeSquares do
         prizeData[#prizeData + 1] = prizeArray[math.random(#prizeArray)]
         if prizeData[#prizeData].color == 'gold' then
             prizeAmount = prizeAmount + (prizeArray[winningSymbol].amount * prizeConfig.multiplier)
