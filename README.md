@@ -3,6 +3,9 @@ A simple yet flexible scratch card system utilizing ox_inventory metadata and Re
 
 **ESX/QB/ND/QBOX supported with bridge**
 
+# [Red40 Development](https://red40.dev/scripts)
+Like this resource and want to support further development? Checkout my store [Red40 Development](https://red40.dev/scripts)
+
 ## Preview
 ![image](https://github.com/solareon/slrn_scratchcard/assets/769465/8167930a-caec-4175-af0d-01b45e436802)
 
