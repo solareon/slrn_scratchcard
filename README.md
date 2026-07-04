@@ -10,7 +10,7 @@ Like this resource and want to support further development? Checkout my store [R
 ![image](https://github.com/solareon/slrn_scratchcard/assets/769465/8167930a-caec-4175-af0d-01b45e436802)
 
 ## Installation
-Download the [release version](https://github.com/solareon/slrn_scratchcard/release) or build using `pnpm i` and `pnpm build`. Add the items to your `ox_inventory` configuration and to a shop then restart your server.
+Download the [release version](https://github.com/solareon/slrn_scratchcard/releases/latest) or build using `pnpm i` and `pnpm build`. Add the items to your `ox_inventory` configuration and to a shop then restart your server.
 
 ### Items
 Add this item to your `ox_inventory/data/items.lua` configuration
