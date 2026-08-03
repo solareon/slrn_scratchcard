@@ -9,30 +9,58 @@ local config = require 'config.server'
 
 local playerData = {}
 
+local function appendPrize(prizeData, prize, isWinner)
+    local prizeEntry = lib.table.deepclone(prize)
+    if isWinner then
+        prizeEntry.color = 'gold'
+    end
+    prizeData[#prizeData + 1] = prizeEntry
+end
+
+local function getFillerSymbol(prizeArray, symbolCounts, maxMatches, winningSymbol)
+    local availableSymbols = {}
+
+    for i = 1, #prizeArray do
+        if i ~= winningSymbol and (symbolCounts[i] or 0) < maxMatches then
+            availableSymbols[#availableSymbols + 1] = i
+        end
+    end
+
+    return availableSymbols[math.random(#availableSymbols)]
+end
+
 local function createScratcher(src, scratcherIndex)
     if not src then return end
 
-    local prizeArray = lib.table.deepclone(config.prizeArray)
+    local prizeArray = config.prizeArray
     local prizeConfig = config.cardArray[scratcherIndex]
     local prizeSquares = prizeConfig.gridSizeX * prizeConfig.gridSizeY
     local winningSymbol = math.random(#prizeArray)
     local prizeData = {}
-    local winner = math.random(100) <= prizeConfig.winChance and true or false
+    local symbolCounts = {}
+    local winner = math.random(100) <= prizeConfig.winChance
     local prizeAmount = 0
+
     if winner then
         for _ = 1, prizeConfig.minWinSymbol do
-            prizeData[#prizeData + 1] = prizeArray[winningSymbol]
-            prizeData[#prizeData].color = 'gold'
+            appendPrize(prizeData, prizeArray[winningSymbol], true)
+            symbolCounts[winningSymbol] = (symbolCounts[winningSymbol] or 0) + 1
             prizeAmount = prizeAmount + (prizeArray[winningSymbol].amount * prizeConfig.multiplier)
         end
         prizeSquares = prizeSquares - prizeConfig.minWinSymbol
     end
+
     for _ = 1, prizeSquares do
-        prizeData[#prizeData + 1] = prizeArray[math.random(#prizeArray)]
-        if prizeData[#prizeData].color == 'gold' then
-            prizeAmount = prizeAmount + (prizeArray[winningSymbol].amount * prizeConfig.multiplier)
-        end
+        local fillerSymbol = getFillerSymbol(
+            prizeArray,
+            symbolCounts,
+            prizeConfig.minWinSymbol - 1,
+            winner and winningSymbol or nil
+        )
+        symbolCounts[fillerSymbol] = (symbolCounts[fillerSymbol] or 0) + 1
+        appendPrize(prizeData, prizeArray[fillerSymbol], false)
     end
+
     playerData[src].prizeAmount = prizeAmount
 
     local cardData = {}
