@@ -1,31 +1,17 @@
-name: Main CI
-on: [push, pull_request]
-jobs:
-  build:
-    name: Build Test
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: web
+name: CI
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup node environment
-        uses: actions/setup-node@v3
-        with:
-          node-version: 24.x
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
-      - uses: actions/cache@v4
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-      - name: Install deps
-        run: yarn --frozen-lockfile
-      - name: Try build
-        run: yarn build
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    uses: Red40-Development/red40-public-workflows/.github/workflows/ci.yml@v1
+    with:
+      # Optional. Defaults to the repository root, Node 24, and pnpm 11.
+      working_directory: web

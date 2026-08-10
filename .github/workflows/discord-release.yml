@@ -1,22 +1,15 @@
-name: "Discord Release Notification"
+name: Discord release notification
 
 on:
-    release:
-      types: [published]
+  release:
+    types: [published]
+
 jobs:
-  github-releases-to-discord:
-    name: Discord Releases Changelog
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
-    - name: Github Releases To Discord
-      uses: SethCohen/github-releases-to-discord@v1.15.0
-      with:
-        webhook_url: ${{ secrets.WEBHOOK_URL }}
-        color: "16736808"
-        username: ${{ github.event.repository.name }}
-        avatar_url: "https://slrn.dev/SLRN_Development.png"
-        footer_timestamp: true
-        footer_title: "SLRN Development"
-        footer_icon_url: "https://slrn.dev/SLRN_Development.png"
+  notify:
+    uses: Red40-Development/red40-public-workflows/.github/workflows/discord-release.yml@v1
+    with:
+      avatar_url: "https://slrn.dev/SLRN_Development.png"
+      footer_icon_url: "https://slrn.dev/SLRN_Development.png"
+      footer_title: "SLRN Development"
+    secrets:
+      DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
