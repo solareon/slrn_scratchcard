@@ -3,6 +3,9 @@ A simple yet flexible scratch card system utilizing ox_inventory metadata and Re
 
 **ESX/QB/ND/QBOX supported with bridge**
 
+# [Red40 Lotto](https://red40.dev/package/7596691)
+Looking for something with more detail and customization? Check out our new [Red40 Lotto](https://red40.dev/package/7596691) which provides a complete lottery/scratchcard system for your server's economy. Includes an in-game prop where players interact to purchase scratchers and lotto tickets, and optionally redeem winning tickets. Includes number games, symbol games, and a draw number system with detailed customization and localization support. Use coupon code `lotto10` for 10% off.
+
 # [Red40 Development](https://red40.dev/scripts)
 Like this resource and want to support further development? Checkout my store [Red40 Development](https://red40.dev/scripts)
 
